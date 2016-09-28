@@ -1,148 +1,73 @@
-float x;
-float y;
-float easing = 0.05;
-float angle = 0;
+//Nursyazana Nadzirah bt Yusof
+//1151302850
 
-int a = 400;
-int b = 35;
-int dragX, dragY, moveX, moveY;
-int frame = 0;
+import controlP5.*;
+ControlP5 cp5;
 
-boolean drawT = false;
+int myColor = color(255);
+int c1, c2;
+float n, n1;
 
+int p1;
+int p2;
+int p3;
+int p4;
+
+int Positioning;
+int ControlX;
+int ControlY;
+boolean WhiteBlack;
+boolean Color;
 
 void setup() {
-  size(640, 360); 
-  stroke(0, 221, 225);
-  strokeWeight(5);  
-  fill(0);
-  textSize(200);
+  size(1000, 1000);
+  noStroke();
+  cp5 = new ControlP5(this);
 
-  noCursor();
+  cp5.addSlider("Positioning").setPosition(400, 800).setSize(100, 15).setRange(0, 100);
+  cp5.addKnob("ControlX") .setRange(0, 255).setValue(50).setPosition(200, 800).setRadius(50).setDragDirection(Knob.VERTICAL);
+  cp5.addKnob("ControlY") .setRange(0, 255).setValue(50).setPosition(600, 800).setRadius(50).setDragDirection(Knob.VERTICAL);
+  cp5.addToggle("WhiteBlack").setPosition(500, 900).setSize(50, 15).setMode(Toggle.SWITCH);
+  cp5.addToggle("Color").setPosition(500, 700).setSize(50, 15).setMode(Toggle.SWITCH);
 }
 
-void draw() { 
-  background(255);
-  line(mouseX, mouseY, pmouseX, pmouseY);
-  text(key, 0, 180); (20,75)
+void draw() {
+  background(0, 0, 0);
+  myColor = lerpColor(c1, c2, n);
+  n += (1-n)* 0.1;
 
-  ellipse(dragX, dragY, 33, 33); 
-  fill(153);
-  ellipse(moveX, moveY, 33, 33); 
-
-if (mousePressed == true) {
-    cursor(HAND); 
+  if (WhiteBlack==false) {
+    p1 = 255;
   } else {
-    cursor(CROSS);
+    p1 = 0;
   }
-  line(mouseX, 0, mouseX, height);
-  line(0, mouseY, height, mouseY);
-
-
-  if (drawT == true) {
-    rect(20, 20, 60, 20);
-    rect(39, 40, 22, 45);
-  }
-
-  if (keyPressed == true) {
-    if ((key >= 32) && (key <= 126)) {
-      
-      angle = (key - 32) * 3;
-    }
-  }
-  arc(50, 50, 66, 66, 0, radians(angle));
-
-  if (keyPressed == true) {
-    int x = key - 180;
-    line(x, 0, x, height);
-  }
-
-  if ((keyPressed == true) && (key == 'q')) {
-    line(120, 0, 120, 75);
-  } else { 
-    ellipse(80, 280, 100, 100);
-  }
-
-
-  if (keyPressed == true) { 
-    line(a, 0, a-320, 640); 
-  } else { 
-  }
-
-  fill(0, 150);
-
-  if (mouseButton == LEFT) {
-    fill(0); // Black
-  } else if (mouseButton == RIGHT) {
-    fill(255); // White
-  } else { 
-    fill(126); // Gray
-  }
-
-  line(240, 70, 420, 70);
-  if (key == CODED) { 
-    if (keyCode == UP) {
-      b = 20;
-    } else if (keyCode == DOWN) {
-      b = 70;
-    }
+  
+  if (Color==false) {
+    p2 = 0;
+    p3 = 0;
+    p4 = 0;
+   
   } else {
-    b = 20;
+    p2 = 154;
+    p3 = 132;
+    p4 = 165;
   }
-  rect(280, b, 100, 50);
+  
 
-
-  if ((mouseX <= 180) && (mouseY <= 180)) {
-    rect(0, 0, 320, 640); 
-  } else if ((mouseX <= 180) && (mouseY >= 180)) {
-    rect(320, 0, 320, 640); 
-  } else if ((mouseX > 180) && (mouseY <= 180)) {
-    rect(320, 0, 320, 640); 
-  } else if ((mouseX > 180) && (mouseY <= 180)) {
-    rect(320, 0, 320, 640); 
-  } else {
-    rect(180, 180, 320, 320); 
-  }
-
-  line(mouseX, 0, mouseX, 100);
-  line(0, mouseY, 100, mouseY);
-
-
-  float targetX = mouseX;
-  float dx = targetX - x;
-  x += dx * easing;
-
-  float targetY = mouseY;
-  float dy = targetY - y;
-  y += dy * easing;
-
-  float ix = width - mouseX; // Inverse X
-  float iy = height - mouseY; // Inverse Y
-
-  ellipse(mouseX, mouseY, y, y);
-  ellipse(mouseX/2, mouseY/2, iy, iy); 
-  ellipse(mouseX*2, mouseY*2, 66, 66); 
-
-  ellipse(dragX, dragY, 33, 33); 
-  fill(153);
-  ellipse(moveX, moveY, 33, 33); 
+  rect(250-ControlX+Positioning, 500-ControlY, 50, 50);
+  fill(p1+p2, p1+p3, p1+p4);
+  rect(450+Positioning, 500+ControlY, 50, 50);
+  fill(p1+p2, p1+p3, p1+p4);
+  rect(650+ControlX+Positioning, 500-ControlY, 50, 50);
+  fill(p1+p2, p1+p3, p1+p4);
+}
+public void controlEvent(ControlEvent theEvent) {
+  println(theEvent.getController().getName());
+  n = 0;
 }
 
-void mouseMoved() { 
-  moveX = mouseX;
-  moveY = mouseY;
-}
-
-void mousePressed() {
-  redraw();
-
-  loop();
-  frame = 0;
-}
-
-
-void keyPressed() {
-  if ((key == 'T') || (key == 't')) {
-    drawT = true;
-  }
+public void Color(int theValue) {
+  println("a button event from colorA: "+theValue);
+  c1 = c2;
+  c2 = color(random(255), random(255), random(255));
 }
